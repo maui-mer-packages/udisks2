@@ -31,6 +31,10 @@ Requires:   dbus >= %{dbus_version}
 Requires:   udev >= %{udev_version}
 Requires:   util-linux
 Requires:   e2fsprogs
+Requires:   systemd
+Requires(preun): systemd
+Requires(post): systemd
+Requires(postun): systemd
 BuildRequires:  pkgconfig(gio-unix-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(glib-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(gudev-1.0) >= %{udev_version}
@@ -118,6 +122,18 @@ rm -rf %{buildroot}
 
 %find_lang udisks2
 
+%preun
+if [ "$1" -eq 0 ]; then
+systemctl stop udisks2.service
+fi
+
+%post
+systemctl daemon-reload
+systemctl reload-or-try-restart udisks2.service
+
+%postun
+systemctl daemon-reload
+
 %post -n libudisks2 -p /sbin/ldconfig
 
 %postun -n libudisks2 -p /sbin/ldconfig
@@ -128,8 +144,8 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/udisks2
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.UDisks2.conf
 %{_datadir}/bash-completion/completions/udisksctl
-%{_prefix}/lib/systemd/system/udisks2.service
-%{_prefix}/lib/udev/rules.d/80-udisks2.rules
+/lib/systemd/system/udisks2.service
+/lib/udev/rules.d/80-udisks2.rules
 %{_sbindir}/umount.udisks2
 %dir %{_prefix}/lib/udisks2
 %{_prefix}/lib/udisks2/udisksd

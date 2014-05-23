@@ -1,0 +1,123 @@
+Name: udisks2
+Version: 2.1.3
+Release: 1
+Summary: Disk Manager
+Description: |
+  udisks provides a daemon, D-Bus API and command line tools for
+  managing disks and storage devices. This package is for the udisks 2.x
+  series.
+Group: System/Libraries
+License: GPLv2+
+URL: http://www.freedesktop.org/wiki/Software/udisks
+Sources:
+    - "%{name}-%{version}.tar.xz"
+SetupOptions: -q -n %{name}-%{version}/upstream
+
+Macros:
+    - glib2_version;2.31.13
+    - dbus_version;1.2
+    - dbus_glib_version;0.82
+    - polkit_version;0.92
+    - parted_version;1.8.8
+    - udev_version;165
+    - mdadm_version;2.6.7
+    - device_mapper_version;1.02
+    - libatasmart_version;0.17
+    - sg3_utils_version;1.27
+    - smp_utils_version;0.94
+
+PkgBR:
+    - gobject-introspection-devel
+    - intltool
+    - libacl-devel
+    - python
+    - sg3_utils-devel >= %{sg3_utils_version}
+PkgConfigBR:
+    - gio-unix-2.0 >= %{glib2_version}
+    - glib-2.0 >= %{glib2_version}
+    - gudev-1.0 >= %{udev_version}
+    - libatasmart >= %{libatasmart_version}
+    - libsystemd >= 44
+    - polkit-agent-1 >= %{polkit_version}
+    - polkit-gobject-1 >= %{polkit_version}
+    - systemd
+    - udev >= %{udev_version}
+    - dbus-1 >= %{dbus_version}
+    - dbus-glib-1 >= %{dbus_version}
+    - libparted >= %{parted_version}
+    - devmapper >= %{device_mapper_version}
+    - libxslt
+Requires:
+    - dbus >= %{dbus_version}
+    - udev >= %{udev_version}
+    - util-linux
+    - e2fsprogs
+
+Obsoletes:
+    - DeviceKit-disks <= 009
+Provides:
+    - DeviceKit-disks = 010
+
+# for /proc/self/mountinfo, only available in 2.6.26 or higher
+Conflicts:
+    - kernel < 2.6.26
+
+Configure: autogen
+ConfigOptions:
+     - --disable-man-pages
+     - --disable-man
+     - --disable-gtk-doc
+     - --disable-gtk-doc-html
+Builder: make
+
+Files:
+    - "%doc README AUTHORS NEWS COPYING HACKING"
+    - "%dir %{_sysconfdir}/udisks2"
+    - "%{_sysconfdir}/dbus-1/system.d/org.freedesktop.UDisks2.conf"
+    - "%{_datadir}/bash-completion/completions/udisksctl"
+    - "%{_prefix}/lib/systemd/system/udisks2.service"
+    - "%{_prefix}/lib/udev/rules.d/80-udisks2.rules"
+    - "%{_sbindir}/umount.udisks2"
+    - "%dir %{_prefix}/lib/udisks2"
+    - "%{_prefix}/lib/udisks2/udisksd"
+    - "%{_bindir}/udisksctl"
+#    - "%{_mandir}/man1/*"
+#    - "%{_mandir}/man8/*"
+    - "%{_datadir}/polkit-1/actions/org.freedesktop.udisks2.policy"
+    - "%{_datadir}/dbus-1/system-services/org.freedesktop.UDisks2.service"
+# Permissions for local state data are 0700 to avoid leaking information
+# about e.g. mounts to unprivileged users
+# %attr(0700,root,root) %dir %{_localstatedir}/lib/udisks2
+
+SubPackages:
+    - Name: libudisks2
+      AsWholeName: true
+      Summary: Dynamic library to access the udisks daemon
+      Description: |
+        This package contains the dynamic library libudisks2, which provides
+        access to the udisks daemon. This package is for the udisks 2.x
+        series.
+      Group: System/Libraries
+      Files:
+          - "%{_libdir}/libudisks2.so.*"
+          - "%{_libdir}/girepository-1.0/UDisks-2.0.typelib"
+    - Name: libudisks2-devel
+      AsWholeName: true
+      Summary: Development files for libudisks2
+      Description: |
+        This package contains the development files for the library
+        libudisks2, a dynamic library, which provides access to the udisks
+        daemon. This package is for the udisks 2.x series.
+      Group: Development/Libraries
+      Requires:
+          - libudisks2 = %{version}-%{release}
+          - pkgconfig
+      Files:
+          - "%{_libdir}/libudisks2.so"
+          - "%dir %{_includedir}/udisks2"
+          - "%dir %{_includedir}/udisks2/udisks"
+          - "%{_includedir}/udisks2/udisks/*.h"
+          - "%{_datadir}/gir-1.0/UDisks-2.0.gir"
+#          - "%dir %{_datadir}/gtk-doc/html/udisks2"
+#          - "%{_datadir}/gtk-doc/html/udisks2/*"
+          - "%{_libdir}/pkgconfig/udisks2.pc"

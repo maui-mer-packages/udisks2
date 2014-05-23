@@ -95,13 +95,12 @@ daemon. This package is for the udisks 2.x series.
 
 %build
 # >> build pre
+sed -i 's/GTK_DOC_CHECK([1.3])//g' configure.ac
 # << build pre
 
-%reconfigure --disable-static \
-    --disable-man-pages \
-    --disable-man \
-    --disable-gtk-doc \
-    --disable-gtk-doc-html
+%autogen --disable-static
+%configure --disable-static \
+    --disable-man
 
 make %{?_smp_mflags}
 

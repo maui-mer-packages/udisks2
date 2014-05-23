@@ -63,12 +63,9 @@ Provides:
 Conflicts:
     - kernel < 2.6.26
 
-Configure: reconfigure
+Configure: autogen
 ConfigOptions:
-     - --disable-man-pages
      - --disable-man
-     - --disable-gtk-doc
-     - --disable-gtk-doc-html
 Builder: make
 
 Files:

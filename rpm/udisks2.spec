@@ -97,8 +97,7 @@ daemon. This package is for the udisks 2.x series.
 # >> build pre
 # << build pre
 
-%autogen --disable-static
-%configure --disable-static \
+%reconfigure --disable-static \
     --disable-man-pages \
     --disable-man \
     --disable-gtk-doc \

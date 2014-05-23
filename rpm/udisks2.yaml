@@ -63,7 +63,7 @@ Provides:
 Conflicts:
     - kernel < 2.6.26
 
-Configure: autogen
+Configure: reconfigure
 ConfigOptions:
      - --disable-man-pages
      - --disable-man

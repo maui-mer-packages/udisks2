@@ -29,6 +29,7 @@ Macros:
 PkgBR:
     - gobject-introspection-devel
     - intltool
+    - gnome-common
     - libacl-devel
     - python
     - sg3_utils-devel >= %{sg3_utils_version}

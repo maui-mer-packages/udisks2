@@ -47,6 +47,7 @@ BuildRequires:  pkgconfig(devmapper) >= %{device_mapper_version}
 BuildRequires:  pkgconfig(libxslt)
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  intltool
+BuildRequires:  gnome-common
 BuildRequires:  libacl-devel
 BuildRequires:  python
 BuildRequires:  sg3_utils-devel >= %{sg3_utils_version}

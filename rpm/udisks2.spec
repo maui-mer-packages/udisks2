@@ -45,6 +45,7 @@ BuildRequires:  pkgconfig(dbus-glib-1) >= %{dbus_glib_version}
 BuildRequires:  pkgconfig(libparted) >= %{parted_version}
 BuildRequires:  pkgconfig(devmapper) >= %{device_mapper_version}
 BuildRequires:  pkgconfig(libxslt)
+BuildRequires:  pkgconfig(gtk-doc)
 BuildRequires:  gobject-introspection-devel
 BuildRequires:  intltool
 BuildRequires:  gnome-common
@@ -95,7 +96,6 @@ daemon. This package is for the udisks 2.x series.
 
 %build
 # >> build pre
-sed -i 's/GTK_DOC_CHECK([1.3])//g' configure.ac
 # << build pre
 
 %autogen --disable-static

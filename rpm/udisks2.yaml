@@ -48,6 +48,7 @@ PkgConfigBR:
     - libparted >= %{parted_version}
     - devmapper >= %{device_mapper_version}
     - libxslt
+    - gtk-doc
 Requires:
     - dbus >= %{dbus_version}
     - udev >= %{udev_version}

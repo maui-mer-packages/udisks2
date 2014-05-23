@@ -43,7 +43,7 @@ PkgConfigBR:
     - systemd
     - udev >= %{udev_version}
     - dbus-1 >= %{dbus_version}
-    - dbus-glib-1 >= %{dbus_version}
+    - dbus-glib-1 >= %{dbus_glib_version}
     - libparted >= %{parted_version}
     - devmapper >= %{device_mapper_version}
     - libxslt

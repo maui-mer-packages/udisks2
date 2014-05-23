@@ -41,7 +41,7 @@ BuildRequires:  pkgconfig(polkit-gobject-1) >= %{polkit_version}
 BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(udev) >= %{udev_version}
 BuildRequires:  pkgconfig(dbus-1) >= %{dbus_version}
-BuildRequires:  pkgconfig(dbus-glib-1) >= %{dbus_version}
+BuildRequires:  pkgconfig(dbus-glib-1) >= %{dbus_glib_version}
 BuildRequires:  pkgconfig(libparted) >= %{parted_version}
 BuildRequires:  pkgconfig(devmapper) >= %{device_mapper_version}
 BuildRequires:  pkgconfig(libxslt)
@@ -135,8 +135,6 @@ rm -rf %{buildroot}
 %dir %{_prefix}/lib/udisks2
 %{_prefix}/lib/udisks2/udisksd
 %{_bindir}/udisksctl
-%{_mandir}/man1/*
-%{_mandir}/man8/*
 %{_datadir}/polkit-1/actions/org.freedesktop.udisks2.policy
 %{_datadir}/dbus-1/system-services/org.freedesktop.UDisks2.service
 # >> files

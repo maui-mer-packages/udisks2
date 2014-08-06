@@ -1,6 +1,6 @@
 Name: udisks2
 Version: 2.1.3
-Release: 1
+Release: 8
 Summary: Disk Manager
 Description: |
   udisks provides a daemon, D-Bus API and command line tools for
@@ -20,6 +20,7 @@ Macros:
     - polkit_version;0.92
     - parted_version;1.8.8
     - udev_version;165
+    - systemd_version;204
     - mdadm_version;2.6.7
     - device_mapper_version;1.02
     - libatasmart_version;0.17
@@ -38,11 +39,9 @@ PkgConfigBR:
     - glib-2.0 >= %{glib2_version}
     - gudev-1.0 >= %{udev_version}
     - libatasmart >= %{libatasmart_version}
-    - libsystemd >= 44
+    - systemd
     - polkit-agent-1 >= %{polkit_version}
     - polkit-gobject-1 >= %{polkit_version}
-    - systemd
-    - udev >= %{udev_version}
     - dbus-1 >= %{dbus_version}
     - dbus-glib-1 >= %{dbus_glib_version}
     - libparted >= %{parted_version}
@@ -51,14 +50,22 @@ PkgConfigBR:
     - gtk-doc
 Requires:
     - dbus >= %{dbus_version}
-    - udev >= %{udev_version}
+    - systemd >= %{systemd_version}
     - util-linux
     - e2fsprogs
+
+RequiresPost:
+    - systemd
+RequiresPreUn:
+    - systemd
+RequiresPostUn:
+    - systemd
 
 Obsoletes:
     - DeviceKit-disks <= 009
 Provides:
     - DeviceKit-disks = 010
+    - service(udisks2) = %{name}
 
 # for /proc/self/mountinfo, only available in 2.6.26 or higher
 Conflicts:
@@ -74,8 +81,8 @@ Files:
     - "%dir %{_sysconfdir}/udisks2"
     - "%{_sysconfdir}/dbus-1/system.d/org.freedesktop.UDisks2.conf"
     - "%{_datadir}/bash-completion/completions/udisksctl"
-    - "/lib/systemd/system/udisks2.service"
-    - "/lib/udev/rules.d/80-udisks2.rules"
+    - "%{_unitdir}/udisks2.service"
+    - "%{_udevrulesdir}/80-udisks2.rules"
     - "%{_sbindir}/umount.udisks2"
     - "%dir %{_prefix}/lib/udisks2"
     - "%{_prefix}/lib/udisks2/udisksd"

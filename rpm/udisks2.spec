@@ -10,6 +10,7 @@ Name:       udisks2
 %define libatasmart_version 0.17
 %define dbus_version 1.2
 %define smp_utils_version 0.94
+%define systemd_version 204
 %define mdadm_version 2.6.7
 %define parted_version 1.8.8
 %define udev_version 165
@@ -21,17 +22,16 @@ Name:       udisks2
 
 Summary:    Disk Manager
 Version:    2.1.3
-Release:    1
+Release:    8
 Group:      System/Libraries
 License:    GPLv2+
 URL:        http://www.freedesktop.org/wiki/Software/udisks
 Source0:    %{name}-%{version}.tar.xz
 Source100:  udisks2.yaml
 Requires:   dbus >= %{dbus_version}
-Requires:   udev >= %{udev_version}
+Requires:   systemd >= %{systemd_version}
 Requires:   util-linux
 Requires:   e2fsprogs
-Requires:   systemd
 Requires(preun): systemd
 Requires(post): systemd
 Requires(postun): systemd
@@ -39,11 +39,9 @@ BuildRequires:  pkgconfig(gio-unix-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(glib-2.0) >= %{glib2_version}
 BuildRequires:  pkgconfig(gudev-1.0) >= %{udev_version}
 BuildRequires:  pkgconfig(libatasmart) >= %{libatasmart_version}
-BuildRequires:  pkgconfig(libsystemd) >= 44
+BuildRequires:  pkgconfig(systemd)
 BuildRequires:  pkgconfig(polkit-agent-1) >= %{polkit_version}
 BuildRequires:  pkgconfig(polkit-gobject-1) >= %{polkit_version}
-BuildRequires:  pkgconfig(systemd)
-BuildRequires:  pkgconfig(udev) >= %{udev_version}
 BuildRequires:  pkgconfig(dbus-1) >= %{dbus_version}
 BuildRequires:  pkgconfig(dbus-glib-1) >= %{dbus_glib_version}
 BuildRequires:  pkgconfig(libparted) >= %{parted_version}
@@ -57,6 +55,7 @@ BuildRequires:  libacl-devel
 BuildRequires:  python
 BuildRequires:  sg3_utils-devel >= %{sg3_utils_version}
 Provides:   DeviceKit-disks = 010
+Provides:   service(udisks2) = %{name}
 Conflicts:   kernel < 2.6.26
 Obsoletes:   DeviceKit-disks <= 009
 
@@ -122,18 +121,6 @@ rm -rf %{buildroot}
 
 %find_lang udisks2
 
-%preun
-if [ "$1" -eq 0 ]; then
-systemctl stop udisks2.service
-fi
-
-%post
-systemctl daemon-reload
-systemctl reload-or-try-restart udisks2.service
-
-%postun
-systemctl daemon-reload
-
 %post -n libudisks2 -p /sbin/ldconfig
 
 %postun -n libudisks2 -p /sbin/ldconfig
@@ -144,8 +131,8 @@ systemctl daemon-reload
 %dir %{_sysconfdir}/udisks2
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.UDisks2.conf
 %{_datadir}/bash-completion/completions/udisksctl
-/lib/systemd/system/udisks2.service
-/lib/udev/rules.d/80-udisks2.rules
+%{_unitdir}/udisks2.service
+%{_udevrulesdir}/80-udisks2.rules
 %{_sbindir}/umount.udisks2
 %dir %{_prefix}/lib/udisks2
 %{_prefix}/lib/udisks2/udisksd
